@@ -1,0 +1,28 @@
+<!DOCTYPE>
+<html>
+    <head>
+        <script src="edTable.js"></script>
+    </head>
+    <body>
+        <div id="tableContainer">
+            This will contain table
+        </div>
+        <script>
+            console.log(edTable);
+            var tableData = [
+                ['ram', 'shyam'],
+                ['rahul', 'amar'],
+                ['selva', 'aanand']
+            ];
+            var config = {
+                nbRows: 3,
+                nbCols: 2,
+                id: 'MyTable',
+                data: tableData
+            }
+            var t = new edTable(config);
+            t.init().display('tableContainer');
+            console.dir(t);
+        </script>
+    </body>
+</html>
