@@ -31,6 +31,12 @@ Table.prototype.init = function() {
     }
     t.appendChild(tbody);
     this.table = t;
+    var self = this;
+    document.body.addEventListener('click', function(e){
+        if(e.target !== self.table && !self.hasChild(e.target)) {
+            self.closeAllEditableCols.call(self);
+        }
+    });
     return this;
 };
 
@@ -39,6 +45,29 @@ Table.prototype.display = function(targatId) {
     if (targat && targat.tagName === 'DIV') {
         targat.appendChild(this.table);
     }
-}
+};
+
+Table.prototype.hasChild = function(child) {
+    if (child.parentNode === this.table) {
+      return true;
+    } else if (child.parentNode === null) {
+      return false;
+    } else {
+      return this.hasChild(child.parentNode);
+    }
+  }
+
+Table.prototype.closeAllEditableCols = function() {
+    // find all columns which all in editMode
+    var editModeCols = [];
+    for (var i=0; i<this.rows.length; i++) {
+        var cols = this.rows[i].columns;
+        for (var j=0; j<cols.length; j++) {
+            if (cols[j].editMode) {
+                cols[j].stopEdit();
+            }
+        }
+    }
+};
 
 module.exports = Table;

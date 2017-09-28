@@ -110,6 +110,12 @@ Table.prototype.init = function() {
     }
     t.appendChild(tbody);
     this.table = t;
+    var self = this;
+    document.body.addEventListener('click', function(e){
+        if(e.target !== self.table && !self.hasChild(e.target)) {
+            self.closeAllEditableCols.call(self);
+        }
+    });
     return this;
 };
 
@@ -118,7 +124,30 @@ Table.prototype.display = function(targatId) {
     if (targat && targat.tagName === 'DIV') {
         targat.appendChild(this.table);
     }
-}
+};
+
+Table.prototype.hasChild = function(child) {
+    if (child.parentNode === this.table) {
+      return true;
+    } else if (child.parentNode === null) {
+      return false;
+    } else {
+      return this.hasChild(child.parentNode);
+    }
+  }
+
+Table.prototype.closeAllEditableCols = function() {
+    // find all columns which all in editMode
+    var editModeCols = [];
+    for (var i=0; i<this.rows.length; i++) {
+        var cols = this.rows[i].columns;
+        for (var j=0; j<cols.length; j++) {
+            if (cols[j].editMode) {
+                cols[j].stopEdit();
+            }
+        }
+    }
+};
 
 module.exports = Table;
 
@@ -151,6 +180,7 @@ Row.prototype.createRow = function() {
         tr.appendChild(col.createColumn());
         this.columns.push(col);
     }
+    this.row = tr;
     return tr;
 };
 
@@ -180,19 +210,31 @@ Column.prototype.createColumn = function() {
     td.id = this.tableId+'_ROW_'+this.rowNum+'_COL_'+this.colNum;
     var self = this;
     td.addEventListener('click' , function(e) {
-        self.updatedColumnData = this.innerHTML;
-        self._updateColumn(e, this);
+        if (!self.editMode) {
+            self.editMode = true;
+            self.updatedColumnData = this.innerHTML;
+            self._updateColumn(e, this);
+        }
     });
 
     td.innerHTML = this.data ? this.data : '';
+    this.column = td;
     return td;
 };
 
 Column.prototype._updateColumn = function(e, el) {
     var box= document.createElement('input');
-    box.innerHTML = this.updatedColumnData;
+    box.value = this.updatedColumnData;
     el.innerHTML = '';
     el.appendChild(box);
+};
+
+Column.prototype.stopEdit = function() {
+    console.log("I want to stop edit for ", this.tableId +'_'+this.rowNum+'_'+this.colNum);
+    var data = this.column.firstElementChild.value;
+    this.column.removeChild(this.column.firstElementChild);
+    this.column.innerHTML = data;
+    delete this.editMode;
 };
 
 module.exports = Column;

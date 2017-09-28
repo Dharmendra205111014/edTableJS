@@ -23,6 +23,7 @@ Row.prototype.createRow = function() {
         tr.appendChild(col.createColumn());
         this.columns.push(col);
     }
+    this.row = tr;
     return tr;
 };
 

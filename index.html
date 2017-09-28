@@ -1,18 +1,43 @@
 <!DOCTYPE>
 <html>
     <head>
+        <style>
+        body {
+            color: rgba(51, 50, 50, 0.98);
+            background-color: #D7D9DB
+        }
+        h3 {
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            color: rgba(51, 50, 50, 0.98)
+        }
+        div {
+            margin: 0px auto;
+            width: 800px;
+        }
+        table {
+            border-collapse: collapse;
+            margin: 0px auto;
+        }
+        table tr td {
+            width: 161px;
+            height: 25px;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        </style>
         <script src="edTable.js"></script>
     </head>
     <body>
         <div id="tableContainer">
-            This will contain table
+            <h3>Click on any column to edit, click outside table to get back in normal state</h3>
         </div>
         <script>
             console.log(edTable);
             var tableData = [
                 ['ram', 'shyam'],
                 ['rahul', 'amar'],
-                ['selva', 'aanand']
+                ['ramu', 'shyamu']
             ];
             var config = {
                 nbRows: 3,
